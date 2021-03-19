@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ 
+<mapper namespace="dev.mvc.notice.NoticeDAOInter">
+  <!-- 목록-->
+  <select id="list" resultType="NoticeVO" >
+    select noticeno, title, id, c_date, u_date, file1
+    from notice
+    order by noticeno asc
+  </select>
+  
+   <!-- 조회-->
+  <select id="read" resultType="NoticeVO" parameterType="int" >
+    select noticeno, title, id, contents, c_date, u_date, file1
+    from notice
+    where noticeno = #{noticeno}
+    order by noticeno asc
+  </select>
+  
+  <!-- 등록 -->
+
+</mapper>
