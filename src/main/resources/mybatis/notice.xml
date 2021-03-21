@@ -8,19 +8,55 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="dev.mvc.notice.NoticeDAOInter">
   <!-- 목록-->
   <select id="list" resultType="NoticeVO" >
-    select noticeno, title, id, c_date, u_date, file1
+    select noticeno, title, id, TO_CHAR(c_date, 'yyyy-mm-dd') as c_date, NVL(TO_CHAR(u_date, 'yyyy-mm-dd'), '0000-00-00') as u_date, NVL2(file1, file1, '-') as file1
     from notice
     order by noticeno asc
   </select>
   
    <!-- 조회-->
   <select id="read" resultType="NoticeVO" parameterType="int" >
-    select noticeno, title, id, contents, c_date, u_date, file1
+    select noticeno, title, id, contents, TO_CHAR(c_date, 'yyyy-mm-dd') as c_date, NVL(TO_CHAR(u_date, 'yyyy-mm-dd'), '0000-00-00') as u_date, NVL2(file1, file1, '-') as file1
     from notice
     where noticeno = #{noticeno}
-    order by noticeno asc
   </select>
   
   <!-- 등록 -->
+  <insert id="create" parameterType="NoticeVO" >
+    INSERT INTO notice(noticeno, title, id, contents, c_date, file1)
+    VALUES(notice_seq.nextval, #{title}, #{id}, #{contents}, sysdate, #{file1})
+  </insert>
+  
+  <!-- 수정 -->
+  <update id="update" parameterType="NoticeVO">
+    UPDATE notice 
+    SET title=#{title}, contents=#{contents}, u_date=sysdate
+    WHERE noticeno=#{noticeno}
+  </update>
+  
+  <!-- 삭제 -->
+  <delete id="delete" parameterType="int">
+    delete from notice
+    where noticeno = #{noticeno}
+  </delete>
+  
+  <!-- 전체 글 결과 -->
+  <select id="search_count" resultType="int">
+    SELECT COUNT(*) as cnt
+    FROM notice
+  </select>
+  
+  <!-- 페이징 목록 -->
+  <select id="list_page" resultType="NoticeVO" parameterType="HashMap">
+    SELECT noticeno, title, id, TO_CHAR(c_date, 'yyyy-mm-dd') as c_date, NVL(TO_CHAR(u_date, 'yyyy-mm-dd'), '0000-00-00') as u_date, NVL2(file1, file1, '-') as file1, r
+    FROM (
+               SELECT noticeno, title, id, c_date, u_date, file1, rownum as r
+               FROM (
+                         SELECT noticeno, title, id, c_date, u_date, file1
+                         FROM notice
+                         ORDER BY noticeno DESC
+               )          
+    )
+    WHERE <![CDATA[ r >= #{startNum} AND r <= #{endNum} ]]>
+  </select>
 
 </mapper>

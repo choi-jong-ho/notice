@@ -1,4 +1,9 @@
 package dev.mvc.notice;
+
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 /*
    noticeno                      NUMBER(10)         NOT NULL    PRIMARY KEY,
    title                           VARCHAR2(100)    NOT NULL,
@@ -16,6 +21,8 @@ public class NoticeVO {
   private String c_date = "";
   private String u_date = "";
   private String file1 = "";
+  
+  private List<MultipartFile> file1MF;
   
   public int getNoticeno() {
     return noticeno;
@@ -59,6 +66,11 @@ public class NoticeVO {
   public void setFile1(String file1) {
     this.file1 = file1;
   }
-  
-  
+  public List<MultipartFile> getFile1MF() {
+    return file1MF;
+  }
+  public void setFile1MF(List<MultipartFile> file1mf) {
+    file1MF = file1mf;
+  }
+
 }
